@@ -1,0 +1,40 @@
+<header>
+    <h1 class="app-name">
+        <a href="/">Neutron Drive</a>
+    </h1>
+    <nav>
+        <ul class="nav-links">
+            <% if (user) { %>
+                <li class="nav-link">
+                    <form action="/profile" method="get">
+                        <button type="submit" class="nav-btn username">
+                            <%= user %>
+                        </button>
+                    </form>
+                </li>
+                <li class="nav-link">
+                    <form action="/logout" method="post">
+                        <button type="submit" class="nav-btn logout">
+                            Log out
+                        </button>
+                    </form>
+                </li>
+            <% } else { %>
+                <li class="nav-link">
+                    <form action="/signin" method="get">
+                        <button type="submit" class="nav-btn login">
+                            Sign in
+                        </button>
+                    </form>
+                </li>
+            <% } %>
+            <li class="nav-link">
+                <form action="/signup" method="get">
+                    <button type="submit" class="nav-btn signup">
+                        Sign up
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+</header>
