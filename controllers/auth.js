@@ -7,7 +7,7 @@ const LocalStrategy = require('passport-local').Strategy;
 passport.use(new LocalStrategy(
     async (username, password, done) => {
         try {
-            const user = await db.getUser(username);
+            const user = await db.getUser(username.toLowerCase());
             if (!user) {
                 return done(null, false, { message: 'Incorrect username' });
             }
@@ -62,7 +62,7 @@ const genUser = (req, res) => {
         } 
         if (hashPass) {
             try {
-                db.createUser(username, hashPass)
+                db.createUser(username.toLowerCase(), hashPass)
                 .then(() => res.redirect('/signin'))
                 .catch((err) => {
                     let error;
