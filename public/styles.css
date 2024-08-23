@@ -14,6 +14,8 @@
     --color-accent: #ff4500;
     --color-accent-alt: #f0f8ff;
     --color-secondary: #00ff7f;
+    --color-error: #ff6347;
+    --color-error-bg: #330000;
 }
 
 *{
@@ -30,7 +32,7 @@ body {
 
 header {
     background-color: rgba(11, 11, 69, 0.9);
-    padding: 20px 30px;
+    padding: 0 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -131,7 +133,7 @@ nav ul {
 
 .signup-section {
     max-width: 600px;
-    margin: 50px auto;
+    margin: 20px auto;
     padding: 20px;
     background-color: var(--color-primary);
     border-radius: 8px;
@@ -156,7 +158,7 @@ nav ul {
 .signup-form, .signin-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 
 .signup-form label, .signin-form label {
@@ -164,7 +166,7 @@ nav ul {
     font-weight: bold;
 }
 
-.signup-form input, .signin-form input {
+.signup-form input, .signin-form input, .newfolder {
     padding: 10px;
     border: 1px solid var(--color-accent);
     border-radius: 5px;
@@ -176,7 +178,9 @@ nav ul {
 .signup-form input:focus,
 .signup-form input:valid,
 .signin-form input:focus,
-.signin-form input:valid {
+.signin-form input:valid,
+.newfolder:valid,
+.newfolder:focus {
     border-color: var(--color-secondary);
     outline: none;
 }
@@ -199,4 +203,81 @@ nav ul {
     color: var(--color-primary-alt);
 }
 
+.errors {
+    margin-top: -5px;
+    margin-bottom: 10px;
+    padding: 5px;
+    background-color: var(--color-error-bg);
+    border: 1px solid var(--color-error);
+    border-radius: 5px;
+}
 
+.error {
+    color: var(--color-error);
+    font-size: 13px;
+    margin: 0;
+}
+
+
+/* folder styles */
+
+aside{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 200px;
+    padding: 10px;
+    gap: 5px;
+}
+
+/* Styling for the New Folder button */
+.new-folder-btn {
+    background-color: var(--color-primary);
+    color: var(--color-accent-alt);
+    border: 2px solid var(--color-secondary);
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    width: 200px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.new-folder-btn:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-primary-alt);
+}
+
+/* Styling for the folders */
+.folders {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 20px;
+}
+
+.folder {
+    background-color: var(--color-primary);
+    color: var(--color-accent-alt);
+    border: 2px solid var(--color-accent-alt);
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    width: 200px;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.folder:hover {
+    background-color: var(--color-primary-alt);
+    border-color: var(--color-secondary);
+}
+
+/* Styling for the files inside the folders */
+.file {
+    color: var(--color-secondary);
+    margin-left: 10px;
+    font-size: 14px;
+}
