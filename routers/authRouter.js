@@ -22,7 +22,19 @@ router.post('/signin', validateSignIn, (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
         if (err) return next(err);
         if (!user) {
-            const authError = { msg: info.message, path: 'username'};
+            
+            let path;
+
+            if (info.message.toLowerCase().includes("username")) {
+                path = "username";
+            } else if (info.message.toLowerCase().includes("password")) {
+                path = "password";
+            } else {
+                path = "password";
+            }
+
+            const authError = { msg: info.message, path };
+            
             return res.render('signin', { user: null, formData: req.body, errors: [authError] });
         }
         req.logIn(user, err => {
