@@ -9,7 +9,7 @@ passport.use(new LocalStrategy(
         try {
             const user = await db.getUser(username);
             if (!user) {
-                return done(null, false, { message: 'Username not found' });
+                return done(null, false, { message: 'Incorrect username' });
             }
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) {

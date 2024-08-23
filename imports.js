@@ -7,7 +7,6 @@ const passport = require('passport');
 
 
 const authRouter = require('./routers/authRouter');
-const { getHome } = require('./controllers/auth');
 
 const app = express();
 
@@ -38,7 +37,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', authRouter);
-app.use('/', getHome);
 
 
 module.exports = app;

@@ -29,7 +29,7 @@ router.post('/signin', validateSignIn, (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            return res.redirect('home');
+            return res.redirect('/');
         });
     })(req, res, next);
 });
