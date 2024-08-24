@@ -17,6 +17,43 @@ async function createUser(username, password) {
     }
 }
 
+async function createRoot(user) {
+
+    const rootFolder = await prisma.folder.create({
+        data: {
+            name: 'root',
+            user: {
+                connect: {
+                    id: user.id,
+                }
+            }
+        }
+    })
+
+    return rootFolder;
+}
+
+async function createFolder(name, userId, parentId) {
+    
+    try {
+        const folder = await prisma.folder.create({
+            data: {
+                name: name,
+                parentId: parentId,
+                user: {
+                    connect: {
+                        id: userId,
+                    }
+                }
+            }
+        })
+        return folder;
+    } catch (err) {
+        console.log(err);
+        
+    }
+}
+
 async function checkUser(username) {
     try {
         const user = prisma.user.findUnique({
@@ -59,4 +96,6 @@ module.exports = {
     createUser,
     getUser,
     checkUser,
+    createRoot,
+    createFolder
 }
