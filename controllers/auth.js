@@ -39,7 +39,7 @@ passport.deserializeUser((user, done) => {
     })
 })
 
-function getHome(req, res) {
+async function getHome(req, res) {
     if (req.user) {
         res.render('home', {user: req.user.username});
         return;
@@ -56,13 +56,14 @@ const genUser = (req, res) => {
     
     const {username, password} = req.body;
 
-    bcrypt.hash(password, 10, (err, hashPass) => {
+    bcrypt.hash(password, 10, async (err, hashPass) => {
         if (err) {
             throw new Error("Error hashing password");
         } 
         if (hashPass) {
             try {
-                db.createUser(username.toLowerCase(), hashPass)
+                const newUsername = username.toLowerCase();
+                db.createUser(newUsername, hashPass)
                 .then(() => res.redirect('/signin'))
                 .catch((err) => {
                     let error;
@@ -71,6 +72,8 @@ const genUser = (req, res) => {
                     }
                     res.render('signup', {user: null, formData: req.body, errors: [error]})
                 })
+                const newUser = await db.getUser(newUsername);
+                db.createRoot(newUser);
                 
             } catch (err) {
                 console.error('Signup error: ', err.message);
