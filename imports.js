@@ -38,5 +38,4 @@ app.use(passport.session());
 
 app.use('/', authRouter);
 
-
 module.exports = app;
