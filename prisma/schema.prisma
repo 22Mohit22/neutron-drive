@@ -30,15 +30,17 @@ model Session {
 
 model Folder {
   id          String    @id @default(cuid())
-  name        String    @unique
-  userId      String    @unique
+  name        String    
+  userId      String    
   user        User      @relation(fields: [userId], references: [id])
-  parentId    String    @unique
+  parentId    String?   
   parent      Folder?   @relation(name: "subFolders", fields: [parentId], references: [id])
   subFolders  Folder[]  @relation(name: "subFolders")
   files       File[]
-  createdAt   DateTime
+  createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@unique([name, userId])
 }
 
 model File {
@@ -46,9 +48,11 @@ model File {
   name      String      @unique
   size      Int
   path      String
-  folderId  String      @unique
+  folderId  String      
   folder    Folder      @relation(fields: [folderId], references: [id])
-  userId    String      @unique
+  userId    String      
   user      User        @relation(fields: [userId], references: [id])
-  createdAt DateTime
+  createdAt DateTime    @default(now())
+  
+  @@unique([name, userId])
 }
