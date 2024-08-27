@@ -204,6 +204,56 @@ async function delFolder(folderId) {
     }
 }
 
+async function createFile(fileName, size, path, folderId, userId) {
+    try {
+        const file = await prisma.file.create({
+            data: {
+                name: fileName,
+                size: size,
+                path: path,
+                folderId: folderId,
+                userId: userId,
+            }
+        })
+        return file;
+    } catch (err) {
+        console.log(err);
+        throw new Error('Error while saving file to database')
+    }
+}
+
+async function editFile(name, folderId) {
+    try {
+        const file = await prisma.file.update({
+            where: {
+                id: folderId
+            },
+            data: {
+                name: name
+            }
+        })
+        return file;
+    } catch (err) {
+        throw new Error('File name is in use')
+    }
+}
+
+async function getFolderByFile(fileId) {
+    try {
+        const file = await prisma.file.findUnique({
+            where: {
+                id: fileId
+            },
+            include: {
+                folder: true
+            }
+        })
+        return file.folder;
+    } catch (err) {
+        console.log(err);
+        throw new Error('Folder not found')
+    }
+}
 
 module.exports = {
     createUser,
@@ -214,5 +264,8 @@ module.exports = {
     createFolder,
     getFolders,
     changeFolderName,
-    delFolder
+    delFolder,
+    createFile,
+    editFile,
+    getFolderByFile
 }
