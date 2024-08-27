@@ -5,7 +5,7 @@ const { validationResult } = require('express-validator');
 
 const router = Router();
 
-router.get('/', getHome);
+// router.get('/', getHome);
 router.get('/signin', signinPage);
 router.get('/signup', signupPage);
 
@@ -13,7 +13,6 @@ router.post('/signup', validateSignUp, signupUser);
 router.post('/signin', validateSignIn, (req, res, next) => {
     const errors = validationResult(req);
     if ( !errors.isEmpty() ) {
-        console.log(errors.array());
         
         res.render('signin', {user: null, formData: req.body, errors: errors.array()});
         return;
@@ -41,7 +40,7 @@ router.post('/signin', validateSignIn, (req, res, next) => {
             if (err) {
                 return next(err);
             }
-            return res.redirect('/');
+            return res.redirect('/home');
         });
     })(req, res, next);
 });
