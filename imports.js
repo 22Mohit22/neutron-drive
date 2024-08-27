@@ -7,6 +7,8 @@ const passport = require('passport');
 
 
 const authRouter = require('./routers/authRouter');
+const homeRouter = require('./routers/homeRouter');
+const errorRouter = require('./routers/errorRouter');
 
 const app = express();
 
@@ -37,5 +39,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', authRouter);
+app.use('/', homeRouter);
+app.all('*', (req, res) => {
+    if (req.user) {
+        res.render('errorPage', {user: req.user.username})
+    } else {
+        res.redirect('/signin');
+    }
+});
 
 module.exports = app;
