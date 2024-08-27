@@ -40,11 +40,9 @@ passport.deserializeUser((user, done) => {
 })
 
 async function getHome(req, res) {
-    if (req.user) {
-        res.render('home', {user: req.user.username});
-        return;
-    } else {
-        res.redirect('signin');
+    if (req.user) res.redirect('/home');
+    else {
+        res.redirect('/signin');
     }
 }
 
@@ -74,7 +72,6 @@ const genUser = (req, res) => {
                 })
                 const newUser = await db.getUser(newUsername);
                 db.createRoot(newUser);
-                
             } catch (err) {
                 console.error('Signup error: ', err.message);
                 res.status(500).send('Server error');
