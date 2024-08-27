@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function createUser(username, password) {
     try {
-        const user = prisma.user.create({
+        const user = await prisma.user.create({
             data: {
                 username: username,
                 password: password
@@ -13,7 +13,7 @@ async function createUser(username, password) {
         return user;
     } catch (err) {
         console.log('Error in creating user: ', err);
-        return 'Username exist';
+        throw new  Error('Username is already taken');
     }
 }
 
@@ -33,13 +33,41 @@ async function createRoot(user) {
     return rootFolder;
 }
 
+async function getRootFolder(userId) {
+    try{
+        const rootFolder = await prisma.folder.findFirst({
+            where: {
+                name: 'root',
+                userId: userId
+            },
+            include: {
+                files: true,
+                subFolders: {
+                    orderBy: {
+                        name: 'asc'
+                    }
+                }
+            }
+        })
+        return rootFolder;
+    } catch (err) {
+        console.log(err);
+        return err;
+        
+    }
+}
+
 async function createFolder(name, userId, parentId) {
     
     try {
         const folder = await prisma.folder.create({
             data: {
                 name: name,
-                parentId: parentId,
+                parent: {
+                    connect: {
+                        id: parentId
+                    }
+                },
                 user: {
                     connect: {
                         id: userId,
@@ -50,13 +78,41 @@ async function createFolder(name, userId, parentId) {
         return folder;
     } catch (err) {
         console.log(err);
+        throw new Error('Folder name already exists');
         
+    }
+}
+
+async function getFolders(parentId, userId) {
+
+    if (parentId == undefined || parentId == null || parentId == NaN) {
+        const folders = getRootFolder(userId);
+        return folders;
+    }
+    try {
+        const folders = await prisma.folder.findUnique({
+            where: {
+                id: parentId
+            },
+            include: {
+                files: true,
+                subFolders: {
+                    orderBy: {
+                        name: 'asc'
+                    }
+                }
+            }
+        })
+        return folders;
+    } catch (err) {
+        console.log(err);
+        return err;
     }
 }
 
 async function checkUser(username) {
     try {
-        const user = prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: {
                 username: username,
             },
@@ -75,7 +131,7 @@ async function checkUser(username) {
 
 async function getUser(username) {
     try {
-        const user = prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: {
                 username: username
             },
@@ -92,10 +148,71 @@ async function getUser(username) {
 
 }
 
+async function changeFolderName(name, folderId) {
+    try {
+        const folder = await prisma.folder.update({
+            where: {
+                id: folderId
+            },
+            data: {
+                name: name
+            }
+        })
+        return folder;
+    } catch (err) {
+        throw new Error('Folder name is in use')
+    }
+
+}
+
+async function delFolder(folderId) {
+    try {
+        // Step 1: Delete all files in the current folder
+        await prisma.file.deleteMany({
+            where: {
+                folderId: folderId
+            }
+        });
+
+        // Step 2: Get all subfolders of the current folder
+        const subFolders = await prisma.folder.findMany({
+            where: {
+                parentId: folderId
+            },
+            include: {
+                files: true,
+                subFolders: true // Include subfolders to handle nested deletion
+            }
+        });
+
+        // Step 3: Recursively delete each subfolder
+        for (const subFolder of subFolders) {
+            await delFolder(subFolder.id); // Recursively call delFolder for each subfolder
+        }
+
+        // Step 4: Delete the current folder itself
+        await prisma.folder.delete({
+            where: {
+                id: folderId
+            }
+        });
+
+        return true;
+    } catch (err) {
+        console.error('Error deleting folder:', err);
+        throw new Error('Error deleting folder');
+    }
+}
+
+
 module.exports = {
     createUser,
     getUser,
     checkUser,
     createRoot,
-    createFolder
+    getRootFolder,
+    createFolder,
+    getFolders,
+    changeFolderName,
+    delFolder
 }
