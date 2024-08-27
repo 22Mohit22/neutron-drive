@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <%- include('./header') %>
+    <div class="app">
+        <form action="/folders/<%= parentId %>/upload" enctype="multipart/form-data" method="post" class="upload-form">
+            <input type="file" class="file-input" name="uploaded_file" required />
+            <button type="submit" class="upload-btn">
+                Upload
+            </button>
+        </form>
+    </div>
+</body>
+</html>
