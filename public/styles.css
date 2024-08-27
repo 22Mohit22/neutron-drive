@@ -280,13 +280,13 @@ aside{
     gap: 5px;
 }
 
-a.folder, .folder-items, .previous-folder {
+a.folder, .folder-items, .file-items, .previous-folder {
     border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box;
     cursor: pointer;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     text-decoration: none;
     transition: background-color 0.3s ease, border-color 0.3s ease;
@@ -298,30 +298,32 @@ a.folder, .folder-items, .previous-folder {
     height: 40px;
     padding: 20px 10px;
 }
+
 .previous-folder{
     padding: 10px;
 }
 
-.folder-items, .previous-folder{
+.folder-items, .file-items, .previous-folder{
     padding-right: 10px;
     background-color: var(--color-primary);
     border: 2px solid var(--color-accent-alt);
     width: 350px;
 }
 
-.folder-items:hover, .previous-folder:hover {
+.folder-items:hover, .file-items:hover, .previous-folder:hover {
     background-color: var(--color-primary-alt);
     border-color: var(--color-secondary);
 }
 
-.folder:hover{
+.folder:hover, .file:hover{
     color: var(--color-secondary);
 }
 
 .btns-con {
     width: 120px;
     display: flex;
-    justify-content: space-between;
+    gap: 20px;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -348,8 +350,10 @@ a.folder, .folder-items, .previous-folder {
 
 
 /* Styling for the files inside the folders */
-.file {
-    color: var(--color-secondary);
+
+.file-items > .btns-con {
+    width: 100%;
+}
+.file{
     margin-left: 10px;
-    font-size: 14px;
 }
