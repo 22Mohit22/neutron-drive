@@ -243,7 +243,7 @@ aside{
 }
 
 /* Styling for the New Folder button */
-.new-folder-btn, .upload-btn, .change-name-btn {
+.new-folder-btn, .upload-btn, .file-upload-btn, .change-name-btn {
     background-color: var(--color-primary);
     color: var(--color-accent-alt);
     border: 2px solid var(--color-secondary);
@@ -256,7 +256,7 @@ aside{
     transition: background-color 0.3s ease;
 }
 
-.new-folder-btn:hover, .upload-btn:hover, .change-name-btn:hover {
+.new-folder-btn:hover, .upload-btn:hover, .file-upload-btn:hover, .change-name-btn:hover {
     background-color: var(--color-secondary);
     color: var(--color-primary-alt);
 }
@@ -327,22 +327,6 @@ a.folder, .folder-items, .file-items, .previous-folder {
     align-items: center;
 }
 
-/* .edit-btn, .del-btn{
-    border: 2px solid var(--color-accent-alt);
-    border-radius: 2px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    transition: all .3s ease;
-    cursor: pointer;
-} */
-
-/* .edit-btn > svg, .del-btn > svg {
-    transform: scale(1.5);
-} */
-
 /* Styling for the files inside the folders */
 
 .file-items > .btns-con {
@@ -376,4 +360,64 @@ a.folder, .folder-items, .file-items, .previous-folder {
     background: transparent;
     border: none;
     cursor: pointer;
+}
+
+/* upload form styles */
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 10px 0;
+}
+
+.custom-file-upload {
+    background-color: var(--color-primary-alt);
+    color: var(--color-accent-alt);
+    border: 2px solid var(--color-secondary);
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    width: 300px;
+    height: 300px;
+    box-sizing: border-box;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.custom-file-upload:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-primary-alt);
+    box-shadow: inset 0 0 15px var(--color-primary-alt);
+}
+
+input[type="file"] {
+    font-size: 20px;
+    text-wrap: wrap;
+    overflow: hidden;
+    width: 280px;
+}
+
+input[type=file]::file-selector-button {
+    display: none;
+}
+
+
+.file-upload-btn{
+    margin: 0;
+    width: 300px;
+    padding: 10px;
+    font-size: 20px;
+    background-color: var(--color-primary-alt);
+    font-weight: bolder;
+    border-radius: 5px;
 }
