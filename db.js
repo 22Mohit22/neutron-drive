@@ -255,6 +255,20 @@ async function getFolderByFile(fileId) {
     }
 }
 
+async function delFile(fileId) {
+    try {
+        await prisma.file.delete({
+            where: {
+                id: fileId,
+            }
+        })
+        return true;
+    } catch (err) {
+        console.log(err);
+        throw new Error('File deletion failed');
+    }
+}
+
 module.exports = {
     createUser,
     getUser,
@@ -267,5 +281,6 @@ module.exports = {
     delFolder,
     createFile,
     editFile,
-    getFolderByFile
+    getFolderByFile,
+    delFile
 }
