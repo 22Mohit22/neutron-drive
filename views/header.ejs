@@ -6,11 +6,9 @@
         <ul class="nav-links">
             <% if (user) { %>
                 <li class="nav-link">
-                    <form action="/profile" method="get">
-                        <button type="submit" class="nav-btn username">
-                            <%= user %>
-                        </button>
-                    </form>
+                    <button type="submit" class="nav-btn username">
+                        <%= user %>
+                    </button>
                 </li>
                 <li class="nav-link">
                     <form action="/logout" method="post">
