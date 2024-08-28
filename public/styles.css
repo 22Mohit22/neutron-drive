@@ -322,12 +322,12 @@ a.folder, .folder-items, .file-items, .previous-folder {
 .btns-con {
     width: 120px;
     display: flex;
-    gap: 20px;
+    gap: 5px;
     justify-content: flex-end;
     align-items: center;
 }
 
-.edit-btn, .del-btn{
+/* .edit-btn, .del-btn{
     border: 2px solid var(--color-accent-alt);
     border-radius: 2px;
     display: flex;
@@ -337,17 +337,11 @@ a.folder, .folder-items, .file-items, .previous-folder {
     height: 30px;
     transition: all .3s ease;
     cursor: pointer;
-}
+} */
 
-.edit-btn > svg, .del-btn > svg {
+/* .edit-btn > svg, .del-btn > svg {
     transform: scale(1.5);
-}
-
-.edit-btn:hover, .del-btn:hover{
-    background-color: var(--color-accent);
-    border-color: var(--color-accent);
-}
-
+} */
 
 /* Styling for the files inside the folders */
 
@@ -356,4 +350,30 @@ a.folder, .folder-items, .file-items, .previous-folder {
 }
 .file{
     margin-left: 10px;
+}
+
+.file-items{
+    position: relative;
+    height: 60px;
+}
+
+.size{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    position: absolute;
+    font-size: 14px;
+    top: 30px;
+    right: 5px;
+}
+
+.download-link, .edit-btn, .del-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
 }
