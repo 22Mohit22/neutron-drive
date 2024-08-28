@@ -10,8 +10,10 @@
     <%- include('./header') %>
     <div class="app">
         <form action="/folders/<%= parentId %>/upload" enctype="multipart/form-data" method="post" class="upload-form">
-            <input type="file" class="file-input" name="uploaded_file" required />
-            <button type="submit" class="upload-btn">
+            <label for="file-upload" class="custom-file-upload">
+                <input type="file" id="file-upload" class="file-input" name="uploaded_file" required />
+            </label>
+            <button type="submit" class="file-upload-btn">
                 Upload
             </button>
         </form>
