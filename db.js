@@ -204,6 +204,22 @@ async function delFolder(folderId) {
     }
 }
 
+async function findFile(fileId) {
+    try {
+        const file = await prisma.file.findUnique({
+            where: {
+                id: fileId,
+            },
+            include: {
+                user: true,
+            }
+        })
+        return file;
+    } catch (err) {
+        throw new Error('File not found');
+    }
+}
+
 async function createFile(fileName, size, path, folderId, userId) {
     try {
         const file = await prisma.file.create({
@@ -282,5 +298,6 @@ module.exports = {
     createFile,
     editFile,
     getFolderByFile,
-    delFile
+    delFile,
+    findFile
 }
