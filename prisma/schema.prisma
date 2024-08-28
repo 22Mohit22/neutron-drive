@@ -46,7 +46,7 @@ model Folder {
 model File {
   id        String      @id @default(cuid())
   name      String      @unique
-  size      Int
+  size      String
   path      String
   folderId  String      
   folder    Folder      @relation(fields: [folderId], references: [id])
