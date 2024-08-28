@@ -377,7 +377,7 @@ a.folder, .folder-items, .file-items, .previous-folder {
 }
 
 .custom-file-upload {
-    background-color: var(--color-primary-alt);
+    background-color: var(--color-primary);
     color: var(--color-accent-alt);
     border: 2px solid var(--color-secondary);
     border-radius: 5px;
@@ -417,7 +417,7 @@ input[type=file]::file-selector-button {
     width: 300px;
     padding: 10px;
     font-size: 20px;
-    background-color: var(--color-primary-alt);
+    background-color: var(--color-primary);
     font-weight: bolder;
     border-radius: 5px;
 }

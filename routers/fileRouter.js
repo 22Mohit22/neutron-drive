@@ -130,7 +130,7 @@ router.get('/download/:id', async (req, res) => {
                     const { data: fileData, error: downloadError } = supabase
                     .storage
                     .from('drive')
-                    .getPublicUrl(filePath, {
+                    .getPublicUrl(file.path, {
                         download: true,
                     });
 
