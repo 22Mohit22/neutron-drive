@@ -72,4 +72,20 @@ router.post('/file/:id/update', async (req, res) => {
     }
 })
 
+router.post('/file/:id/delete', async (req, res) => {
+    if (req.user) {
+        try {
+            console.log(req.params.id);
+            const folder = await db.getFolderByFile(req.params.id);
+            await db.delFile(req.params.id);
+            res.redirect(`/folders/${folder.id}`);
+        } catch (err) {
+            console.log(err);
+            res.redirect('/home')
+        }
+    } else {
+        res.redirect('/home');
+    }
+})
+
 module.exports = router;
