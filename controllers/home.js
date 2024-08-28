@@ -10,9 +10,21 @@ async function afterSignin(req, res) {
 }
 
 async function getFolderContent(req, res) {
-    const folderId = req.params.id;
-    const folderContents = await db.getFolders(folderId);
-    res.render('folder', { user: req.user.username, folderContents: folderContents })
+    if (req.user) {
+        const folderId = req.params.id;
+        try {
+            const folderContents = await db.getFolders(folderId);
+            if(!folderContents) {
+                res.redirect('/home')
+            } else {
+                res.render('folder', { user: req.user.username, folderContents: folderContents })
+            }
+        } catch (err) {
+            throw new Error("Not found")
+        }
+    } else {
+        res.redirect('/signin');
+    }
 }
 
 folderNameValidation = [
@@ -43,18 +55,46 @@ async function createFolder(req, res) {
 
 async function folderForm(req, res) {
     if (req.user) {
+        try {
+            const folder = await db.getFolders(req.params.id, req.user.id);
+            if (!folder) {
+                res.redirect('/home');
+                return;
+            }
+        } catch (err) {
+            throw new Error('Not found');
+        }
         res.render('newFolder', {user: req.user.username, parentFolderId: req.params.id, folderName: null, errors: []})
     }
 }
 
 async function getUpdateFolderForm(req, res) {
-    res.render('changeName', {user: req.user.username, parentFolderId: req.params.id, errors: [] });
+    if (req.user) {
+        try {
+            const folder = await db.getFolders(req.params.id, req.user.id);
+            if (!folder) {
+                res.redirect('/home');
+                return;
+            } 
+            res.render('changeName', {user: req.user.username, parentFolderId: req.params.id, errors: [] });
+        } catch (err) {
+            throw new Error('Not found');
+        }
+    }
 }
 
 async function updateFolder(req, res) {
 
     const parentId = req.params.id;
-    const folder = await db.getFolders(parentId, req.user.id);
+    try {
+        const folder = await db.getFolders(parentId, req.user.id);
+        if (!folder) {
+            res.redirect('/home');
+            return;
+        }
+    } catch (err) {
+        throw new Error('not found');
+    }
     const { newname } = req.body;
 
     try {
@@ -70,13 +110,20 @@ async function updateFolder(req, res) {
 }
 
 async function deleteFolder(req, res) {
-    const folderId = req.params.id;
-    const folder = await db.getFolders(folderId, req.user.id);
-    try {
-        await db.delFolder(folderId);
-        res.redirect(`/folders/${folder.parentId}`)
-    } catch(err) {
-        res.redirect(`/folders/${folder.parentId}`)
+    if (req.user) {
+        const folderId = req.params.id;
+
+        try {
+            const folder = await db.getFolders(folderId, req.user.id);
+            if (!folder) {
+                res.redirect('/home');
+                return;
+            }
+            await db.delFolder(folderId);
+            res.redirect(`/folders/${folder.parentId}`)
+        } catch(err) {
+            res.redirect(`/folders/${folder.parentId}`)
+        }
     }
 }
 
