@@ -19,7 +19,7 @@ const router = Router();
 
 router.get('/folders/:id/upload', async (req, res) => {
     if (req.user) {
-        res.render('uploadFile', {user: req.user.username, parentId: req.params.id});
+        res.render('uploadFile', {user: req.user.username, parentId: req.params.id, errors: []});
     } else {
         res.redirect('/home');
     }
@@ -27,7 +27,14 @@ router.get('/folders/:id/upload', async (req, res) => {
 
 router.post('/folders/:id/upload', upload.single('uploaded_file'), async (req, res) => {
     if (req.user) {
-        const {originalname, size, path} = req.file;
+        const {originalname, size} = req.file;
+
+        function modifyName(name) {
+            const newname = name + '-' + Date.now() + '-' + Math.round(Math.random() * 1E9);
+            return newname;
+        }
+
+        const newname = modifyName(originalname);
         function formatBytes(sizeInBytes) {
             const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
             if (sizeInBytes === 0) return '0 Bytes';
@@ -42,22 +49,23 @@ router.post('/folders/:id/upload', upload.single('uploaded_file'), async (req, r
             const { data: uploadData, error } = await supabase
             .storage
             .from('drive')
-            .upload(`${req.user.username}/${originalname}`, req.file.buffer, {
+            .upload(`${req.user.username}/${newname}`, req.file.buffer, {
                 cacheControl: '3600',
                 upsert: false,
                 contentType: req.file.mimetype,
             });
 
-            console.log('upload: ', uploadData);
-            console.log('error: ', error);
+            if (!error) {
+                await db.createFile(newname, formatSize, uploadData.path, parentId, req.user.id);
+                res.redirect(`/folders/${parentId}`);
+            } else {
+                res.render('uploadFile', {user: req.user.username, parentId: parentId, errors: [error]})
+            }
 
-            await db.getFolders(parentId, req.user.id);
-            await db.createFile(originalname, formatSize, uploadData.path, parentId, req.user.id);
             
-            res.redirect(`/folders/${parentId}`);
         } catch (err) {
             console.log(err);
-            throw new Error('Not found');
+            throw new Error('Something went wrong');
         }
         
     } else {
@@ -77,9 +85,18 @@ router.post('/file/:id/update', async (req, res) => {
     if (req.user) {
         const filename = req.body.filename;
         try {
-            await db.editFile(filename, req.params.id);
+            const file = await db.findFile(req.params.id);
             const parentFolder = await db.getFolderByFile(req.params.id);
-            res.redirect(`/folders/${parentFolder.id}`);
+            const newPath = `${req.user.username}/${filename}`;
+            const { data, error } = await supabase
+            .storage.from('drive')
+            .move(`${file.path}`, newPath);
+            if (data) {
+                res.redirect(`/folders/${parentFolder.id}`);
+                await db.editFile(filename, req.params.id, newPath);
+            } else {
+                res.render('editFileName', {user: req.user.username, fileId: req.params.id, errors: [error]});
+            }
         } catch (err) {
             err = {
                 path: 'filename',
