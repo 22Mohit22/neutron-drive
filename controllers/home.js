@@ -67,7 +67,7 @@ async function folderForm(req, res) {
         } catch (err) {
             throw new Error('Not found');
         }
-        res.render('newFolder', {user: req.user.username, parentFolderId: req.params.id, folderName: null, errors: []})
+        res.render('newfolder', {user: req.user.username, parentFolderId: req.params.id, folderName: null, errors: []})
     }
 }
 
