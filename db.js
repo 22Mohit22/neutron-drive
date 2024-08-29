@@ -238,14 +238,15 @@ async function createFile(fileName, size, path, folderId, userId) {
     }
 }
 
-async function editFile(name, folderId) {
+async function editFile(name, folderId, path) {
     try {
         const file = await prisma.file.update({
             where: {
                 id: folderId
             },
             data: {
-                name: name
+                name: name,
+                path: path
             }
         })
         return file;
