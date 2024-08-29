@@ -13,6 +13,17 @@
             <label for="file-upload" class="custom-file-upload">
                 <input type="file" id="file-upload" class="file-input" name="uploaded_file" required />
             </label>
+            <% if (errors) { %>
+                <% errors.forEach(err => { %>
+                    <% if (err.error) { %>
+                        <div class="errors">
+                            <p class="error">
+                                <%= err.message %>
+                            </p>
+                        </div>
+                    <% } %>
+                <% }) %>
+            <% } %>
             <button type="submit" class="file-upload-btn">
                 Upload
             </button>
