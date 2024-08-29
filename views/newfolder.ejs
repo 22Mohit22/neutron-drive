@@ -10,7 +10,7 @@
     <%- include('./header') %>
     <div class="app">
         <form action="/folders/<%= parentFolderId %>/create" method="post" class="file-folder-form">
-            <div>
+            <div class="new-folder-input-btn-con">
                 <input type="text" name="newfolder" id="newfolder" value="<%= folderName || '' %>" class="newfolder" placeholder="New Folder" autofocus required />
                 <button type="submit" class="create new-folder-btn"> + New Folder</button>
             </div>
