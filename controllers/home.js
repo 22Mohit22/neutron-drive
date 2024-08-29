@@ -27,9 +27,11 @@ async function getFolderContent(req, res) {
     }
 }
 
-folderNameValidation = [
-    body('newfolder').trim().isLength({min: 1}).withMessage('Folder cannot be empty').escape(),
-    body('newfolder').trim().isEmpty({ignore_whitespace: false}).withMessage('Folder cannot be empty').escape()
+const folderNameValidation = [
+    body('newfolder').trim().isLength({min: 1}).withMessage('Enter a name').escape(),
+]
+const editFolderNameValidation = [
+    body('editname').trim().notEmpty().withMessage('Enter a name').escape()
 ]
 
 async function createFolder(req, res) {
@@ -37,8 +39,9 @@ async function createFolder(req, res) {
     const newfolder = req.body.newfolder.toLowerCase();
     const parentFolderId = req.params.id;
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty()) {        
         res.render('newfolder', {user: user.username, parentFolderId: parentFolderId, folderName: newfolder, errors: errors.array()})
+        return;
     }
 
     try {
@@ -86,35 +89,40 @@ async function getUpdateFolderForm(req, res) {
 async function updateFolder(req, res) {
 
     const parentId = req.params.id;
+    const folder = await db.getFolders(parentId, req.user.id);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log(errors);
+        
+        res.render('changeName', {user: req.user.username, parentFolderId: folder.parentId, errors: errors.array()})
+        return;
+    }
+    const { editname } = req.body;
     try {
-        const folder = await db.getFolders(parentId, req.user.id);
         if (!folder) {
             res.redirect('/home');
             return;
+        } else {
+            try {
+                await db.changeFolderName(editname, folder.id);
+                res.redirect(`/folders/${folder.parentId}`);
+            } catch (err) {
+                console.log(err);
+                res.render('changeName', {user: req.user.username, parentFolderId: folder.parentId, errors: [err]})
+            }
         }
     } catch (err) {
         throw new Error('not found');
     }
-    const { newname } = req.body;
 
-    try {
-        await db.changeFolderName(newname, folder.id);
-        res.redirect(`/folders/${folder.parentId}`);
-    } catch (err) {
-        err = {
-            path: 'editname',
-            msg: 'Folder name is already in use'
-        }
-        res.render('changeName', {user: req.user.username,parentFolderId: folder.parentId, errors: [err]})
-    }
 }
 
 async function deleteFolder(req, res) {
     if (req.user) {
         const folderId = req.params.id;
 
+        const folder = await db.getFolders(folderId, req.user.id);
         try {
-            const folder = await db.getFolders(folderId, req.user.id);
             if (!folder) {
                 res.redirect('/home');
                 return;
@@ -124,6 +132,8 @@ async function deleteFolder(req, res) {
         } catch(err) {
             res.redirect(`/folders/${folder.parentId}`)
         }
+    } else {
+        res.redirect('/home');
     }
 }
 
@@ -134,5 +144,7 @@ module.exports = {
     getFolderContent,
     getUpdateFolderForm,
     updateFolder,
-    deleteFolder
+    deleteFolder,
+    folderNameValidation,
+    editFolderNameValidation
 }
