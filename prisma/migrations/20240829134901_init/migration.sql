@@ -33,7 +33,7 @@ CREATE TABLE "Folder" (
 CREATE TABLE "File" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "size" INTEGER NOT NULL,
+    "size" TEXT NOT NULL,
     "path" TEXT NOT NULL,
     "folderId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
