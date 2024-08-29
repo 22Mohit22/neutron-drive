@@ -11,7 +11,7 @@
     <div class="app">
         <form action="/folders/<%= parentFolderId %>/update" method="post" class="file-folder-form">
             <div>
-                <input type="text" name="newname" id="newname" class="newname" placeholder="New name" autofocus required />
+                <input type="text" name="editname" id="editname" class="newname" placeholder="New name" autofocus required />
                 <button type="submit" class="change-name-btn">Save name</button>
             </div>
             <% if (errors) { %>
