@@ -68,6 +68,12 @@ const genUser = (req, res) => {
                     if (err.code == 'P2002') {
                         error = {msg: 'Username is taken', path: err.meta.target[0]};
                     }
+                    if (err) {
+                        error = {
+                            msg: 'Something went wrong', path: 'username'
+                        }
+                    }
+                    
                     res.render('signup', {user: null, formData: req.body, errors: [error]})
                 })
                 const newUser = await db.getUser(newUsername);
@@ -83,6 +89,7 @@ const genUser = (req, res) => {
 
 const validateSignUp = [
     body('username').trim().isLength({min: 3}).withMessage('Must be atleast 3 characters long').escape(),
+    body('username').trim().matches(/^[^\s]+$/).withMessage('Username cannot contain spaces').escape(),
     body('password').trim().isLength({min: 8}).withMessage('Password must be 8 characters long').escape(),
     body('confirmpassword').trim().custom((password, { req }) => {
         if (password !== req.body.password) {
@@ -93,7 +100,7 @@ const validateSignUp = [
 ]
 
 const validateSignIn = [
-    body('username').trim().isLength({min: 3}).withMessage('Must be atleast 3 characters long').escape(),
+    body('username').trim().isLength({min: 1}).withMessage('Must be atleast 3 characters long').escape(),
     body('username').trim().matches(/^[^\s]+$/).withMessage('Username cannot contain spaces').escape(),
     body('password').trim().isLength({min: 8}).withMessage('Password must be 8 characters long').escape()
 ]

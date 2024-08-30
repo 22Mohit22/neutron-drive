@@ -13,7 +13,7 @@ async function getFolderContent(req, res) {
     if (req.user) {
         const folderId = req.params.id;
         try {
-            const folderContents = await db.getFolders(folderId);
+            const folderContents = await db.getFolders(folderId, req.user.id);
             if(!folderContents) {
                 res.redirect('/home')
             } else {
